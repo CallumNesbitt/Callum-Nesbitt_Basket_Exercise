@@ -189,5 +189,24 @@ class MainTest {
         Assertions.assertNotEquals(null, System.err);
     }
 
+    @Test
+    void extraDPPrice() {
+        List<String> prices = Arrays.asList("Apple, 0.357, 0", "Banana, 0.20, 0", "Melon, 0.50, tfo", "Lime, 0.15, tft");
+        List<String> items = new LinkedList<String>();
+        items.add("Apple");
+        items.add("Banana");
+        items.add("Apple");
+        items.add("Lime");
+        items.add("Lime");
+        items.add("Lime");
+        items.add("Lime");
+        items.add("Melon");
+        items.add("Melon");
+        items.add("Melon");
+
+        Basket basket = new Basket(prices, items);
+        Assertions.assertNotEquals(null, System.err);
+    }
+
     // TODO - Security manager (allow testing for attempts to "System.exit", rather than testing for non-empty "System.err")
 }
