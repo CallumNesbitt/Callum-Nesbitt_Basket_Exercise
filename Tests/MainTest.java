@@ -11,16 +11,14 @@ class MainTest {
     @Test
     void noArgs() {
         List<String> items = new LinkedList<String>();
-        List<String> prices = Arrays.asList("Apple, 0.35, 0", "Banana, 0.20, 0", "Melon, 0.50, tfo", "Lime, 0.15, tft");
-
-        Basket basket = new Basket(prices, items);
+        List<Product> products = Arrays.asList(new Product("Apple", 0.35f, "0"), new Product("Banana", 0.20f, "0"), new Product("Melon", 0.50f, "tfo"), new Product("Lime", 0.15f, "tft"));
+        Basket basket = new Basket(items, products);
         Float price = basket.price();
         Assertions.assertEquals(0, price);
     }
 
     @Test
     void validArgs() {
-        List<String> prices = Arrays.asList("Apple, 0.35, 0", "Banana, 0.20, 0", "Melon, 0.50, tfo", "Lime, 0.15, tft");
         List<String> items = new LinkedList<String>();
         items.add("Apple");
         items.add("Banana");
@@ -33,7 +31,8 @@ class MainTest {
         items.add("Melon");
         items.add("Melon");
 
-        Basket basket = new Basket(prices, items);
+        List<Product> products = Arrays.asList(new Product("Apple", 0.35f, "0"), new Product("Banana", 0.20f, "0"), new Product("Melon", 0.50f, "tfo"), new Product("Lime", 0.15f, "tft"));
+        Basket basket = new Basket(items, products);
         Float price = basket.price();
         Assertions.assertEquals(2.35f, price);
     }
@@ -43,11 +42,9 @@ class MainTest {
         List<String> items = new LinkedList<String>();
         items.add("Banaynay");
         items.add("Banaynay");
-        List<String> prices = Arrays.asList("Apple, 0.35, 0", "Banana, 0.20, 0", "Melon, 0.50, tfo", "Lime, 0.15, tft");
-
         List<String> exp = Arrays.asList();
-
-        Basket basket = new Basket(prices, items);
+        List<Product> products = Arrays.asList(new Product("Apple", 0.35f, "0"), new Product("Banana", 0.20f, "0"), new Product("Melon", 0.50f, "tfo"), new Product("Lime", 0.15f, "tft"));
+        Basket basket = new Basket(items, products);
         Float price = basket.price();
         Assertions.assertEquals(exp, items);
         Assertions.assertNotEquals(null, System.err);
@@ -63,12 +60,9 @@ class MainTest {
         items.add("Lyme");
         items.add("Lemon");
         items.add("Melon");
-
         List<String> exp = Arrays.asList("Banana", "Apple", "Melon");
-
-        List<String> prices = Arrays.asList("Apple, 0.35, 0", "Banana, 0.20, 0", "Melon, 0.50, tfo", "Lime, 0.15, tft");
-
-        Basket basket = new Basket(prices, items);
+        List<Product> products = Arrays.asList(new Product("Apple", 0.35f, "0"), new Product("Banana", 0.20f, "0"), new Product("Melon", 0.50f, "tfo"), new Product("Lime", 0.15f, "tft"));
+        Basket basket = new Basket(items, products);
         Float price = basket.price();
         Assertions.assertNotEquals(null, System.err);
         Assertions.assertEquals(1.05f, price);
@@ -77,7 +71,6 @@ class MainTest {
 
     @Test
     void noPrices() {
-        List<String> prices = Arrays.asList();
         List<String> items = new LinkedList<String>();
         items.add("Apple");
         items.add("Banana");
@@ -90,32 +83,13 @@ class MainTest {
         items.add("Melon");
         items.add("Melon");
 
-        Basket basket = new Basket(prices, items);
-        Assertions.assertNotEquals(null, System.err);
-    }
-
-    @Test
-    void invalidPrice() {
-        List<String> prices = Arrays.asList("Apple, 0.a35, 0", "Banana, 0.20, 0", "Melon, 0.50, tfo", "Lime, 0.15, tft");
-        List<String> items = new LinkedList<String>();
-        items.add("Apple");
-        items.add("Banana");
-        items.add("Apple");
-        items.add("Lime");
-        items.add("Lime");
-        items.add("Lime");
-        items.add("Lime");
-        items.add("Melon");
-        items.add("Melon");
-        items.add("Melon");
-
-        Basket basket = new Basket(prices, items);
+        List<Product> products = Arrays.asList();
+        Basket basket = new Basket(items, products);
         Assertions.assertNotEquals(null, System.err);
     }
 
     @Test
     void invalidDiscount() {
-        List<String> prices = Arrays.asList("Apple, 0.35, 2", "Banana, 0.20, 0", "Melon, 0.50, tfo", "Lime, 0.15, tft");
         List<String> items = new LinkedList<String>();
         items.add("Apple");
         items.add("Banana");
@@ -128,13 +102,13 @@ class MainTest {
         items.add("Melon");
         items.add("Melon");
 
-        Basket basket = new Basket(prices, items);
+        List<Product> products = Arrays.asList(new Product("Apple", 0.35f, "2"), new Product("Banana", 0.20f, "0"), new Product("Melon", 0.50f, "tfo"), new Product("Lime", 0.15f, "tft"));
+        Basket basket = new Basket(items, products);
         Assertions.assertNotEquals(null, System.err);
     }
 
     @Test
     void invalidOffer() {
-        List<String> prices = Arrays.asList("Apple, 0.35, tlc", "Banana, 0.20, 0", "Melon, 0.50, tfo", "Lime, 0.15, tft");
         List<String> items = new LinkedList<String>();
         items.add("Apple");
         items.add("Banana");
@@ -146,14 +120,13 @@ class MainTest {
         items.add("Melon");
         items.add("Melon");
         items.add("Melon");
-
-        Basket basket = new Basket(prices, items);
+        List<Product> products = Arrays.asList(new Product("Apple", 0.35f, "tlc"), new Product("Banana", 0.20f, "0"), new Product("Melon", 0.50f, "tfo"), new Product("Lime", 0.15f, "tft"));
+        Basket basket = new Basket(items, products);
         Assertions.assertNotEquals(null, System.err);
     }
 
     @Test
     void negPrice() {
-        List<String> prices = Arrays.asList("Apple, -0.35, 0", "Banana, 0.20, 0", "Melon, 0.50, tfo", "Lime, 0.15, tft");
         List<String> items = new LinkedList<String>();
         items.add("Apple");
         items.add("Banana");
@@ -165,14 +138,13 @@ class MainTest {
         items.add("Melon");
         items.add("Melon");
         items.add("Melon");
-
-        Basket basket = new Basket(prices, items);
+        List<Product> products = Arrays.asList(new Product("Apple", -0.35f, "0"), new Product("Banana", 0.20f, "0"), new Product("Melon", 0.50f, "tfo"), new Product("Lime", 0.15f, "tft"));
+        Basket basket = new Basket(items, products);
         Assertions.assertNotEquals(null, System.err);
     }
 
     @Test
     void negDiscount() {
-        List<String> prices = Arrays.asList("Apple, 0.35, -0.5", "Banana, 0.20, 0", "Melon, 0.50, tfo", "Lime, 0.15, tft");
         List<String> items = new LinkedList<String>();
         items.add("Apple");
         items.add("Banana");
@@ -184,14 +156,13 @@ class MainTest {
         items.add("Melon");
         items.add("Melon");
         items.add("Melon");
-
-        Basket basket = new Basket(prices, items);
+        List<Product> products = Arrays.asList(new Product("Apple", 0.35f, "-0.4"), new Product("Banana", 0.20f, "0"), new Product("Melon", 0.50f, "tfo"), new Product("Lime", 0.15f, "tft"));
+        Basket basket = new Basket(items, products);
         Assertions.assertNotEquals(null, System.err);
     }
 
     @Test
     void extraDPPrice() {
-        List<String> prices = Arrays.asList("Apple, 0.357, 0", "Banana, 0.20, 0", "Melon, 0.50, tfo", "Lime, 0.15, tft");
         List<String> items = new LinkedList<String>();
         items.add("Apple");
         items.add("Banana");
@@ -203,8 +174,8 @@ class MainTest {
         items.add("Melon");
         items.add("Melon");
         items.add("Melon");
-
-        Basket basket = new Basket(prices, items);
+        List<Product> products = Arrays.asList(new Product("Apple", 0.357f, "0"), new Product("Banana", 0.20f, "0"), new Product("Melon", 0.50f, "tfo"), new Product("Lime", 0.15f, "tft"));
+        Basket basket = new Basket(items, products);
         Assertions.assertNotEquals(null, System.err);
     }
 

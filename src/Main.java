@@ -3,25 +3,26 @@ import java.util.*;
 public class Main {
     public static void main(String[] args) {
         // Item price+offer must follow the format "ItemName, price, discount/offer Code"
-        List<String> prices = Arrays.asList("Apple, 0.35, 0", "Banana, 0.20, 0", "Melon, 0.50, tfo", "Lime, 0.15, tft");
+        // LEGACY List<String> prices = Arrays.asList("Apple, 0.35, 0", "Banana, 0.20, 0", "Melon, 0.50, tfo", "Lime, 0.15, tft");
+        List<Product> products = Arrays.asList(new Product("Apple", 0.35f, "0"), new Product("Banana", 0.20f, "0"), new Product("Melon", 0.50f, "tfo"), new Product("Lime", 0.15f, "tft"));
         // Check prices are given
         try{
-            String t = prices.get(0);
+            Product t = products.get(0);
         }
         catch(ArrayIndexOutOfBoundsException e){
-            System.err.println("Missing prices.");
+            System.err.println("Missing product specifications.");
             System.exit(1);
         }
         // We define our list of valid offer codes
         List<String> validOffers = Arrays.asList("tft"/* three-for-two*/, "tfo"/*two-for-one*/);
-        checkPrices(prices, validOffers);
+        checkPrices(products, validOffers);
         LinkedList<String> items = new LinkedList<>();
         // If command line args given, add them to the "items" list
         if(args.length > 0){
             items.addAll(Arrays.asList(args));
         }
         // Create a new basket containing any items given in the command line which uses the specified prices
-        Basket basket = new Basket(prices, items);
+        Basket basket = new Basket(items, products);
         // If no command line args given, request items are added to the basket
         if(args.length == 0){
             System.out.println("Your basket is empty");
@@ -36,6 +37,36 @@ public class Main {
         System.out.printf("\nBasket total: £%.2f\n", price);
     }
 
+    public static void checkPrices(List<Product> prods, List<String> validOffers){
+        float price;
+        float discount;
+        List<String> products = new ArrayList<>();
+        // For every element in the "prices" list do the following:
+        for(int i = 0; i < products.size(); i++){
+            // 1. Check that the price is a valid number
+            // i. Check that the price is a positive value
+            if(prods.get(i).price < 0){
+                System.err.println("Negative price found in \"" + prods.get(i).name + "\"");
+                System.exit(1);
+            }
+            // ii. Check that at most 2 decimal places are given in the price
+            String[] priceParts = products.get(i).split("\\.");
+            String pennies = priceParts[1];
+            if(pennies.length() > 2){
+                System.err.println("Price specified to too great an accuracy for product \"" + prods.get(i).name + "\"");
+                System.exit(1);
+            }
+        }
+        // Check for duplicate definitions of price/offer for a single item
+        // Convert list of items in "prices" list to set, check lengths are equal
+        Set<Product> prodSet = new HashSet<>(prods);
+        if(prodSet.size() != prods.size()){
+            System.err.println("Conflicting product details found");
+            System.exit(1);
+        }
+    }
+
+    /* LEGACY
     // Checks the list of item prices and offers for any invalid entries
     public static void checkPrices(List<String> prices, List<String> validOffers){
         float price;
@@ -91,7 +122,7 @@ public class Main {
             System.err.println("Duplicate product price found");
             System.exit(1);
         }
-    }
+    } */
 }
 
 // TODO - (Optional) Allow for quick multiples of items (eg "10xApples" rather than "Apple" 10 times)

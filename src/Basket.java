@@ -1,13 +1,12 @@
-import java.text.DecimalFormat;
 import java.util.*;
 
 public class Basket {
-    private List<String> prices;
     private List<String> items;
+    private List<Product> products;
 
-    Basket(List<String> prices, List<String> items){
-        this.prices = prices;
+    Basket(List<String> items, List<Product> products){
         this.items = items;
+        this.products = products;
     }
 
     // Add more items to the existing basket
@@ -33,7 +32,28 @@ public class Basket {
         return(num);
     }
 
-    // Calculate the total price of all instances of an item in the basket
+
+    public Float OOItemTotal(Product item, int n){
+        // Calculate total spent on this item based on offer code
+        try{
+            float discount = Float.parseFloat(item.offer);
+            return(n * item.price * (1 - discount));
+        }
+        catch(NumberFormatException e){
+            switch(item.offer){
+                case "tft":
+                    return(((n % 3) + ((2.0f / 3.0f) * (n - (n % 3)))) * item.price);
+                case "tfo":
+                    return(((n % 2) + ((n - (n % 2)) / 2)) * item.price);
+                default:
+                    System.err.println("Invalid offer found in product \"" + item.name + "\"");
+                    System.exit(1);
+                    return(0f);
+            }
+        }
+    }
+
+    /* LEGACY // Calculate the total price of all instances of an item in the basket
     public float itemTotal(String item, int n){
         String itemInfo = null;
         String[] split = {};
@@ -65,7 +85,7 @@ public class Basket {
             default:
                 return((1 - Float.parseFloat(offer)) * price * n);
         }
-    }
+    } */
 
     // Calculate the total price of all items in the basket
     public float price(){
@@ -75,7 +95,17 @@ public class Basket {
         List<String> uniqItems = new LinkedList<>(itemSet);
         // Calculate the total cost of each item found in the basket
         for(int i = 0; i < uniqItems.size(); i++){
-            price += itemTotal(uniqItems.get(i), countItem(uniqItems.get(i)));
+            for(int j = 0; j < products.size(); j++){
+                if(products.get(j).name.equals(uniqItems.get(i))){
+                    price += OOItemTotal(products.get(j), countItem(uniqItems.get(i)));
+                    break;
+                } else if(j+1 == products.size()){
+                    // If the item is not found, produce an error
+                    items.removeIf(uniqItems.get(i)::equals);
+                    System.out.println("An item in your basket (" + uniqItems.get(i) + ") is invalid and has been removed.");
+                    System.out.println(items);
+                }
+            }
         }
         return(price);
     }
